@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Description: Using the two-layer perceptron to solve a simple classification problem.
+Description: Using different networks to solve a classification problem. Inputs 
+are the lengths and widths of petals and sepals. Targets are the type of 
+plant (iris).
 Author: Raoul Malm
 """
 
 from pylab import *
 import numpy as np  #numerical package for scientific computing
-import TwoLayerPerceptron
+import mlpcn
+import rbf
+import pcn
 
 def preprocessIris(infile,outfile):
     """ replace the plant names with numbers and generate new file """
@@ -37,7 +41,7 @@ def preprocessIris(infile,outfile):
 #preprocessIris('iris.data','iris_proc.data')
 
 #normalise data
-iris = np.loadtxt('iris_proc.data',delimiter=',')
+iris = np.loadtxt('data/iris_proc.data',delimiter=',')
 iris[:,:4] = iris[:,:4] - iris[:,:4].mean(axis=0)
 imax = np.concatenate(((iris.max(axis=0)*np.ones((1,5))),(iris.min(axis=0)*np.ones((1,5)))),axis=0).max(axis=0)
 iris[:,:4] = iris[:,:4]/imax[:4]
@@ -65,16 +69,40 @@ validt = target[1::4]
 test = iris[3::4,0:4]
 testt = target[3::4]
 
-net = TwoLayerPerceptron.mlpcn(train,traint,4,0.2,'softmax','batch')
 
-print('...perceptron training...')
+"""
+#use one-layer perceptron
+net = pcn.pcn(train,traint,0.2,'softmax','batch')
+
+print('\nperceptron training...')
+(trainerror,validerror) = net.pcntrain_automatic(valid,validt,100)
+
+print('Training stop after',len(trainerror)*100,'iterations')
+print('Final Train Error',net.errfunc(net.pcnfwd(train,True),traint))
+print('Final Valid Error',net.errfunc(net.pcnfwd(valid,True),validt))
+"""
+
+#use rbf perceptron
+net = rbf.rbf(train,traint,10,0,1,0.2,'softmax','batch')
+
+print('\nperceptron training ...')
+(trainerror,validerror) = net.rbftrain_automatic(valid,validt,100)
+
+print('Training stop after',len(trainerror)*100,'iterations')
+print('Final Train Error',net.errfunc(net.rbffwd(train,2),traint))
+print('Final Valid Error',net.errfunc(net.rbffwd(valid,2),validt))
+
+"""
+#use two-layer perceptron
+net = mlpcn.mlpcn(train,traint,4,0.2,'softmax','batch')
+
+print('perceptron training...')
 (trainerror,validerror) = net.mlptrain_automatic(train,traint,valid,validt,100)
     
-print()
 print('Training stop after',len(trainerror)*100,'iterations')
 print('Final Train Error',net.errfunc(net.mlpfwd(train,True)[1],traint))
 print('Final Valid Error',net.errfunc(net.mlpfwd(valid,True)[1],validt))
-print()
+"""
 
 net.confmat(test,testt)
  

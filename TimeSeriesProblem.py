@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 """
 Description: Using a two-layer network to predict the ozone layer thickness 
-from data above Palmerston North in New Zealand between 1996 and 2004
+from data above Palmerston North in New Zealand between 1996 and 2004.
 Author: Raoul Malm
 """
 
 from pylab import *
 import numpy as np  #numerical package for scientific computing
-import TwoLayerPerceptron
+import mlpcn
 
 #ozone layer thickness above Palmerston North in New Zealand between 1996 and 2004
 pnoz = loadtxt('data/PNoz.data')
@@ -56,7 +56,7 @@ plot(np.arange(np.shape(pnoz[:-400,2])[0],np.shape(pnoz[:,2])[0],1),pnoz[-400:,2
 legend(loc = 'upper right')
 show()
 
-net = TwoLayerPerceptron.mlpcn(train,traintarget,3,0.25,'linear','batch') 
+net = mlpcn.mlpcn(train,traintarget,4,0.2,'linear','batch') 
 
 trainerror = np.array([])
 validerror = np.array([])
@@ -65,7 +65,7 @@ print('\nStart Train Error',net.errfunc(net.mlpfwd(train,True)[1],traintarget))
 print('Start Valid Error',net.errfunc(net.mlpfwd(valid,True)[1],validtarget))
 
 print('...perceptron training...')
-(trainerror,validerror) = net.mlptrain_automatic(train,traintarget,valid,validtarget,100)
+(trainerror,validerror) = net.mlptrain_automatic(valid,validtarget,100)
 
 #for n in range(100):
 #    trainerror = np.append(trainerror,net.errfunc(net.mlpfwd(train,True)[1],traintarget))
