@@ -1,6 +1,9 @@
-# perceptron
-Creating a (neural) network to solve regression, classification and time-series problems.
+# BasicNeuralNets
+Basic neural networks to solve regression, classification and time-series problems.
 
-- pcn.py: one-layer perceptron
-- mlpcn.py: two-layer perceptron
-- rbf.py:  radial basis function layer + one-layer perceptron
+- pcn.py: class for one-layer perceptron
+- mlpcn.py: class for two-layer perceptron
+- rbf.py: class for radial basis function layer + one-layer perceptron
+- ClassificationProblem.py: Classification
+- RegressionProblem.py: Regression
+- TimeSeriesProblem.py: Time-Series
