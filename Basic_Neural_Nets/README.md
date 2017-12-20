@@ -1,4 +1,4 @@
-# BasicNeuralNets
+# Basic_Neural_Nets
 Basic neural networks to solve regression, classification and time-series problems.
 
 - pcn.py: class for one-layer perceptron
