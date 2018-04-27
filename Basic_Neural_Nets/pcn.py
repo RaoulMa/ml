@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
+Author: Raoul Malm
 Description: Implementation of a one-dimensional perceptron with one neuron 
 layer. The user can specifiy the training method, the learning rate and the 
 function type.
-Author: Raoul Malm
 """
 import numpy as np  #numerical python package for scientific computing
 

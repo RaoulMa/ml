@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Description: Choose a set of data points as weights and calculate RBF nodes for the 
+Author: Raoul Malm
+Description: Choose a set of data points as weights and calculate RBF nodes for the
 first layer. Those are then used as inputs for a one-layer perceptron, which gives the
 output
-Author: Raoul Malm
 """
 
 import numpy as np

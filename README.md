@@ -1,8 +1,3 @@
-# Machine_Learning
-Collection of Machine Learning algorithms and concepts
+# Machine Learning
 
-- Basic_Neural_Nets
-- Euler_Method
-- Polymorphism
-- Sampling_Algorithms
-- VcrMtx
+Collection of Machine Learning algorithms and concepts for the purpose of self-teaching.
