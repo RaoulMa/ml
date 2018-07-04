@@ -42,6 +42,13 @@ class LinkedList:
                 cur = cur.next
             else: 
                 return
+            
+    def search(self,key):
+        # search for a certain key
+        node = self.head
+        while node and node.data!=key:
+            node = node.next
+        return node
        
     def list_print(self):
         val = self.head
@@ -56,8 +63,8 @@ linked_list.insert_at_beginning(18)
 linked_list.insert_at_beginning(21)
 linked_list.insert_at_end(20)
 linked_list.remove_node(17)
-
-
 linked_list.list_print()
+print(linked_list.search(18).data)
+
 
 
