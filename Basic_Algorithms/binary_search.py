@@ -24,6 +24,39 @@ def compute_last_index_position_from_ordered_list(num=3, o_list=np.arange(10)):
             
     return -1
 
+def binary_search(item, list_):
+    """Binary search without recursion."""
+    
+    low = 0
+    high = len(list_)-1
+      
+    while low <= high:
+        mid = (low+high)//2
+        if list_[mid] == item:
+            return True
+        elif list_[mid] < item:
+            low = mid+1
+        else:
+            high = mid-1
+        
+    return False        
+
+def binary_search_with_recursion(item, list_):
+    """Binary seach with recursion"""
+    
+    if len(list_) == 0:
+        return False
+    else:
+        mid = len(list_)//2
+        if list_[mid] == item:
+            return True
+        else:
+            if list_[mid] > item:
+                return binary_search_with_recursion(item, list_[:mid])
+            else:
+                return binary_search_with_recursion(item, list_[mid+1:])
+    
+
 if __name__ == "__main__":
     
     num = 3
@@ -33,6 +66,12 @@ if __name__ == "__main__":
     print('o_list: {}'.format(o_list))
     print('num: {}'.format(num))
     print('idx: {}'.format(idx))
+    
+    num = 6
+    print('number {} was found: {}'.format(num, binary_search(num, o_list)))
+    print('number {} was found: {}'.format(num, binary_search_with_recursion(num, o_list)))
+    
+    
 
 
 

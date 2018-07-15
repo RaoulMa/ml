@@ -58,6 +58,38 @@ def merge_sort(array,l,r):
         merge_sort(array,m+1,r)
         merge(array,l,m,r)
         
+def merge_sort2(alist):
+    
+    if len(alist)>1:
+        mid = len(alist)//2
+        lefthalf = alist[:mid]
+        righthalf = alist[mid:]
+
+        merge_sort2(lefthalf)
+        merge_sort2(righthalf)
+
+        i=0
+        j=0
+        k=0
+        while i < len(lefthalf) and j < len(righthalf):
+            if lefthalf[i] < righthalf[j]:
+                alist[k]=lefthalf[i]
+                i=i+1
+            else:
+                alist[k]=righthalf[j]
+                j=j+1
+            k=k+1
+
+        while i < len(lefthalf):
+            alist[k]=lefthalf[i]
+            i=i+1
+            k=k+1
+
+        while j < len(righthalf):
+            alist[k]=righthalf[j]
+            j=j+1
+            k=k+1
+        
 
 array = [12, 11, 13, 5, 6, 6, 7];
 print("array: {}".format(array))
@@ -65,6 +97,11 @@ print("array: {}".format(array))
 merge_sort(array,0,len(array))
 print("sorted array: {}".format(array))
         
+array = [12, 11, 13, 5, 6, 6, 7];
+print("array: {}".format(array))
+
+merge_sort2(array)
+print("sorted array: {}".format(array))
         
     
 
