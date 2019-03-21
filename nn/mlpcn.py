@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Author: Raoul Malm
 Description: The class mlpcn implements a one-dimensional perceptron with two
 neuron layers. The user can specify the output function (linear, logistic, 
 softmax), the training type (sequential, batch), the number of hidden neurons 

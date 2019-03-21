@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Author: Raoul Malm
 Description: Using the two-layer perceptron to solve a simple regression problem.
 """
 

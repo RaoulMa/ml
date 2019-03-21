@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Author: Raoul Malm
 Description: Using different networks to solve a classification problem. Inputs 
 are the lengths and widths of petals and sepals. Targets are the type of 
 plant (iris).

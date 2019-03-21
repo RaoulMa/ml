@@ -1,5 +1,5 @@
 About
--------
+-----
 
 Collection of algorithms.
 

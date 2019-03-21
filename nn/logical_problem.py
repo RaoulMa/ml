@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Author: Raoul Malm
 Description: Using different networks to solve basic logical problems. 
 """
 

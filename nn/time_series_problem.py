@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Author: Raoul Malm
 Description: Using a two-layer network to predict the ozone layer thickness
 from data above Palmerston North in New Zealand between 1996 and 2004.
 """
