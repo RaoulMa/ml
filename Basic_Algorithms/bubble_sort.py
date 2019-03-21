@@ -15,6 +15,7 @@ def bubble_sort(list_):
         for i in range(n):
             if list_[i] > list_[i+1]:
                 list_[i], list_[i+1] = list_[i+1], list_[i] 
+                print(list_)
 
 if __name__ == "__main__":
     

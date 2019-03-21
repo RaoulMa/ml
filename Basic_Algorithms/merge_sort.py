@@ -52,7 +52,7 @@ def merge(array, l, m, r):
     
 
 def merge_sort(array,l,r):
-    if l<r:
+    if l+1<r:
         m = int((l+r)/2)
         merge_sort(array,l,m)
         merge_sort(array,m+1,r)

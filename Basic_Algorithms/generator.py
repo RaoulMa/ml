@@ -18,7 +18,6 @@ def squares():
 
 def take(n, seq):
     """Returns first n values from the given sequence."""
-    seq = iter(seq)
     result = []
     try:
         for i in range(n):
@@ -27,4 +26,6 @@ def take(n, seq):
         pass
     return result
 
-print(take(5, squares())) # prints [1, 4, 9, 16, 25]
+print(take(10, squares())) # prints [1, 4, 9, 16, 25]
+g = squares()
+print([next(g) for _ in range(10)])
