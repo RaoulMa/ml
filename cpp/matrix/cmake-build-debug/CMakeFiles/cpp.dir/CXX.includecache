@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/raoul/code/algorithms/cpp/matrix/main.cpp
+iostream
+-
+matrix.h
+/Users/raoul/code/algorithms/cpp/matrix/matrix.h
+
+/Users/raoul/code/algorithms/cpp/matrix/matrix.h
+vector
+-
+

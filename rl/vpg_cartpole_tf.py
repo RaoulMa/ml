@@ -2,147 +2,92 @@ import numpy as np
 import tensorflow as tf
 import gym
 
-if __name__ == '__main__':
+env = gym.make('CartPole-v0')
+d_observation = env.observation_space.shape[0]
+n_actions = env.action_space.n
+gamma = 0.99
+seed = 1
 
-    class dotdict(dict):
-        __getattr__ = dict.__getitem__
+np.random.seed(seed)
+tf.set_random_seed(seed)
+env.seed(seed)
 
-    cfg = dotdict({
-        'seed': 16,
-        'policy_hidden_layer_dim': [32],
-        'policy_learning_rate': 0.01,
-        'batch_size': 16
-    })
+observations_ph = tf.placeholder(shape=(None, d_observation), dtype=tf.float32)
 
-    env_name = 'CartPole-v0'
-    env = gym.make(env_name)
+outputs = tf.layers.dense(observations_ph, units=32, activation=tf.nn.relu)
+outputs = tf.layers.dense(outputs, units=n_actions)
 
-    np.random.seed(cfg.seed)
-    tf.set_random_seed(cfg.seed)
-    env.seed(cfg.seed)
+policy = tf.nn.softmax(outputs, axis=1)
+log_policy = tf.nn.log_softmax(outputs, axis=1)
 
-    d_observations = env.observation_space.shape[0]
-    n_actions = env.action_space.n
+actions_ph = tf.placeholder(shape=(None,), dtype=tf.int32)
+actions_enc = tf.one_hot(actions_ph, axis=1, depth=n_actions)
+crewards_ph = tf.placeholder(shape=(None,), dtype=tf.float32)
 
-    # parameters
-    batch_size = 16
-    n_hidden_units = 32
-    learning_rate = 1e-2
-    n_batches = 20
-    gamma = 0.99
+loss = - tf.reduce_mean(tf.reduce_sum(log_policy * actions_enc, axis=1) * crewards_ph, axis=0)
 
-    # policy network
-    observations = tf.placeholder(shape=(None, d_observations), dtype=tf.float32)
-    outputs = observations
-    outputs = tf.layers.dense(outputs, units=n_hidden_units, activation=tf.tanh)
-    outputs = tf.layers.dense(outputs, units=n_actions, activation=None)
-    policy = tf.nn.softmax(outputs)
-    log_policy = tf.nn.log_softmax(outputs)
+train = tf.train.AdamOptimizer(1e-3).minimize(loss)
 
-    # log probabilities for taken actions
-    actions = tf.placeholder(shape=(None,), dtype=tf.int32)
-    actions_enc = tf.one_hot(actions, n_actions)
-    log_proba = tf.reduce_sum(actions_enc * log_policy, axis=1)
+episode_number, batch_number = 0, 0
 
-    # loss & train operation
-    returns = tf.placeholder(shape=(None,), dtype=tf.float32)
-    loss = - tf.reduce_mean(log_proba * returns, axis=0)
-    train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(loss)
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
 
-    sess = tf.Session()
-    sess.run(tf.global_variables_initializer())
+for _ in range(600):
+    batch_number += 1
+    obs_batch, reward_batch, action_batch, creward_batch = [], [], [], []
 
-    n_steps = 0
+    for _ in range(4):
+        ep_length = 0
+        episode_number += 1
 
-    def train_one_batch():
+        obs_batch.append([])
+        reward_batch.append([])
+        action_batch.append([])
+        creward_batch.append([])
 
-        batch_observations, batch_rewards, batch_actions, batch_returns = [], [], [], []
+        obs = env.reset()
+        done = False
+        while not done:
+            ep_length += 1
+            obs_batch[-1].append(obs)
 
-        for i in range(0, batch_size):
+            feed = {observations_ph: np.reshape(obs, (1,-1))}
+            policy_ = np.squeeze(sess.run(policy, feed))
+            action = np.argmax(np.random.multinomial(1, policy_))
+            obs, r, done, info = env.step(action)
 
-            observation, reward, done = env.reset(), 0.0, False
+            action_batch[-1].append(action)
+            reward_batch[-1].append(r)
 
-            batch_observations.append([observation])
-            batch_rewards.append([reward])
-            batch_actions.append([])
+        gamma_list = gamma ** np.arange(0, ep_length)
+        creward_batch.append(gamma_list * np.cumsum(reward_batch[-1][::-1])[::-1])
 
-            while not done:
+    obs_batch = np.vstack(obs_batch)
+    action_batch = np.hstack(action_batch)
+    creward_batch = np.hstack(creward_batch)
 
-                policy_ = sess.run(policy, {observations: observation.reshape(1,-1)})[0]
+    #creward_batch = (creward_batch - np.mean(creward_batch)) / np.std(creward_batch)
 
-                action = np.argmax(np.random.multinomial(1, policy_))
+    feed = {observations_ph: obs_batch, actions_ph: action_batch, crewards_ph: creward_batch}
 
-                observation, reward, done, _ = env.step(action)
+    loss_, _ = sess.run([loss,train], feed)
 
-                batch_actions[-1].append(action)
-                batch_rewards[-1].append(reward)
-                if not done:
-                    batch_observations[-1].append(observation)
+    if batch_number % 50 == 0:
+        areturn = np.mean([np.sum(rewards) for rewards in reward_batch])
+        print('bn {} ep {} loss {} return {}'.format(batch_number, episode_number, loss_, areturn))
 
-            if True:
-                # undiscounted returns
-                returns_ = np.flip(np.cumsum(np.array(batch_rewards[-1][1:])), axis=0)
-            else:
-                # discounted returns
-                rewards_ = batch_rewards[-1]
-                gamma_list = (gamma ** np.arange(len(rewards_)))
-                dreturns =  [sum(rewards_[i+1:] * gamma_list[:len(rewards_)-i-1]) for i in range(len(rewards_)-1)]
-                returns_ = dreturns
-
-            batch_returns.append(returns_)
-
-        feed_observations = np.array([item for sublist in batch_observations for item in sublist])
-        feed_returns = np.array([item for sublist in batch_returns for item in sublist])
-        feed_actions = np.array([item for sublist in batch_actions for item in sublist])
-
-        # standardise returns
-        feed_returns = (feed_returns - np.mean(feed_returns)) / (np.std(feed_returns) + 1e-8)
-
-        feed = {observations: feed_observations, actions: feed_actions, returns: feed_returns}
-
-        # check tensors
-        if False:
-            observations_ = sess.run(observations, feed)
-            actions_ = sess.run(actions, feed)
-            returns_ = sess.run(returns, feed)
-            outputs_ = sess.run(outputs, feed)
-            policy_ = sess.run(policy, feed)
-            actions_enc_ = sess.run(actions_enc, feed)
-            log_proba_ = sess.run(log_proba, feed)
-            loss_ = sess.run(loss, feed)
-
-        loss_, _ = sess.run([loss, train_op], feed)
-
-        return loss_, batch_observations, batch_actions, batch_returns
-
-    for i in range(n_batches):
-        stats = train_one_batch()
-        loss_ = stats[0]
-        ereturn = np.mean(np.array([ret[0] for ret in stats[3]]))
-        n_steps += sum([len(sublist) for sublist in stats[2]])
-
-        print('Batch {} Step {} Loss {:.2f} eReturn {:.2f}'.format(i, n_steps, loss_, ereturn))
-
-    observation = env.reset()
-    counter = 0
-
-    for _ in range(1000):
+for _ in range(2):
+    obs, done = env.reset(), False
+    while not done:
         env.render()
-        policy_ = sess.run(policy, {observations: observation.reshape(1, -1)})[0]
+        feed = {observations_ph: np.reshape(obs, (1, -1))}
+        policy_ = np.squeeze(sess.run(policy, feed))
         action = np.argmax(np.random.multinomial(1, policy_))
-        observation, _, done, _ = env.step(action)
-        counter += 1
-        if done:
-            env.reset()
-            print('reset after {} steps'.format(counter))
-            counter = 0
+        obs, _, done, _ = env.step(action)
 
-    env.close()
-
-    sess.close()
-
-
-
+sess.close()
+env.close()
 
 
 
