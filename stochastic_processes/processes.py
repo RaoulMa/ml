@@ -1,5 +1,6 @@
 import math
 import numpy.random as nrand
+import numpy as np
 
 from utils import ModelParameters
 from utils import convert_to_prices
@@ -28,7 +29,7 @@ def geometric_brownian_motion_log_returns(param):
     :return: returns the log returns of a geometric brownian motion process
     """
     assert isinstance(param, ModelParameters)
-    wiener_process = numpy.array(brownian_motion_log_returns(param))
+    wiener_process = np.array(brownian_motion_log_returns(param))
     sigma_pow_mu_delta = (param.gbm_mu - 0.5 * math.pow(param.all_sigma, 2.0)) * param.all_delta
     return wiener_process + sigma_pow_mu_delta
 
@@ -44,6 +45,7 @@ def ornstein_uhlenbeck_levels(param):
     """Returns the rate levels of a mean-reverting Ornstein-Uhlenbeck process.
     :param param: the model parameters object
     :return: the interest rate levels for the Ornstein Uhlenbeck process
+    dx =
     """
     ou_levels = [param.all_r0]
     brownian_motion_returns = brownian_motion_log_returns(param)
@@ -55,8 +57,8 @@ def ornstein_uhlenbeck_levels(param):
 
 params = ModelParameters(100, 10000, 1/252, 0.1, 0.1, ou_a=0.15, all_r0=1)
 
-processes = [ornstein_uhlenbeck_levels(params),
-             ornstein_uhlenbeck_levels(params),
-             ornstein_uhlenbeck_levels(params)]
+processes = [geometric_brownian_motion_levels(params),
+             geometric_brownian_motion_levels(params),
+             geometric_brownian_motion_levels(params)]
 
 plot_stochastic_processes(processes, 'Processes')
