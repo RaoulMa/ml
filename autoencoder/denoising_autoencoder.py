@@ -1,8 +1,9 @@
+import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets('MNIST_data', validation_size=0)
+mnist = input_data.read_data_sets('data', validation_size=0)
 
 inputs_ph = tf.placeholder(tf.float32, (None, 28, 28, 1), name='inputs')
 targets_ph = tf.placeholder(tf.float32, (None, 28, 28, 1), name='targets')
@@ -48,16 +49,24 @@ sess.run(tf.global_variables_initializer())
 
 n_epochs = 10
 batch_size = 128
+noise_factor = 0.5
 for e in range(n_epochs):
     for b in range(mnist.train.num_examples//batch_size):
         batch = mnist.train.next_batch(batch_size)
         imgs = batch[0].reshape((-1, 28, 28, 1))
+
+        # add noise to images
+        imgs = imgs + noise_factor * np.random.randn(*imgs.shape)
+        imgs = np.clip(imgs, 0., 1.)
+
         feed = {inputs_ph: imgs, targets_ph: imgs}
         loss_, _ = sess.run([loss, train], feed_dict=feed)
     print("ep {} batch {} loss {:.2f}".format(e+1, b, loss_))
 
 fig, axes = plt.subplots(nrows=2, ncols=10, sharex=True, sharey=True, figsize=(20,4))
 test_imgs = mnist.test.images[:10].reshape((-1,28,28,1))
+test_imgs = test_imgs + noise_factor * np.random.randn(*test_imgs.shape)
+test_imgs = np.clip(test_imgs, 0., 1.)
 reconstructed, compressed = sess.run([decoded, encoded], feed_dict={inputs_ph: test_imgs})
 
 for images, row in zip([test_imgs, reconstructed], axes):

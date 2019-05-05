@@ -12,7 +12,7 @@ b = tf.Variable(tf.zeros([10]))
 
 y = tf.nn.softmax(tf.matmul(x_ph, W) + b)
 
-loss = tf.reduce_mean(-tf.reduce_sum(y_ph * tf.log(y), reduction_indices=[1]))
+loss = tf.reduce_mean(-tf.reduce_sum(y_ph * tf.log(y), axis=1))
 
 train_step = tf.train.AdamOptimizer(0.001).minimize(loss)
 

@@ -20,8 +20,8 @@ train = tf.train.AdamOptimizer(0.001).minimize(loss)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
-n_epochs = 1
-batch_size = 200
+n_epochs = 10
+batch_size = 128
 for e in range(n_epochs):
     for b in range(mnist.train.num_examples//batch_size):
         batch = mnist.train.next_batch(batch_size)
