@@ -8,8 +8,8 @@ Input: images with 28x28 pixels, 1 color number
 3. Layer: FC -> ReLu: [.,1024]
 4. Layer: FC -> ReLu: [.,10]
 """
-
-import tensorflow as tf;
+import tensorflow as tf
+from tensorflow.examples.tutorials.mnist import input_data
 mnist = input_data.read_data_sets('data', one_hot=True)
 
 #random weight variables
