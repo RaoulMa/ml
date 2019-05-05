@@ -11,3 +11,5 @@ int2char = dict(enumerate(chars))
 char2int = {ch: i for i,ch in int2char.items()}
 encoded = np.array([char2int[ch] for ch in text])
 
+
+
