@@ -1,0 +1,10 @@
+setup.py
+distributionsraoulmalm/Binomialdistribution.py
+distributionsraoulmalm/Gaussiandistribution.py
+distributionsraoulmalm/Generaldistribution.py
+distributionsraoulmalm/__init__.py
+distributionsraoulmalm.egg-info/PKG-INFO
+distributionsraoulmalm.egg-info/SOURCES.txt
+distributionsraoulmalm.egg-info/dependency_links.txt
+distributionsraoulmalm.egg-info/not-zip-safe
+distributionsraoulmalm.egg-info/top_level.txt
