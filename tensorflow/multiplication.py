@@ -13,3 +13,4 @@ x2 = np.arange(10)
 
 feed = {x1_ph: x1, x2_ph: x2}
 print(sess.run(product, feed))
+
