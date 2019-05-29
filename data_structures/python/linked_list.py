@@ -8,7 +8,7 @@ class LinkedList:
     def __init__(self):
         self.head = None
 
-    def insert_at_beginning(self, value):
+    def insert_at_head(self, value):
         new_node = Node(value)
         new_node.next = self.head
         self.head = new_node
@@ -21,7 +21,7 @@ class LinkedList:
             node = node.next
         return values
 
-    def insert_at_end(self, value):
+    def insert_at_tail(self, value):
         new_node = Node(value)
         node = self.head
         if not node:
@@ -31,7 +31,7 @@ class LinkedList:
                 node = node.next
             node.next = new_node
 
-    def remove(self, key):
+    def remove_at_key(self, key):
         node = self.head
         prev_node = self.head
 
@@ -43,7 +43,6 @@ class LinkedList:
             return True
 
         while node:
-
             if node.value == key:
                 prev_node.next = node.next
                 return True
@@ -54,15 +53,20 @@ class LinkedList:
         return False
 
 linked_list = LinkedList()
-linked_list.insert_at_end(0)
-linked_list.insert_at_beginning(1)
-linked_list.insert_at_beginning(2)
-linked_list.insert_at_beginning(3)
-linked_list.insert_at_beginning(4)
-linked_list.insert_at_end(5)
-linked_list.insert_at_end(6)
-linked_list.remove(4)
-linked_list.remove(0)
+
+linked_list.insert_at_tail(0)
+linked_list.insert_at_head(1)
+linked_list.insert_at_head(2)
+linked_list.insert_at_head(3)
+linked_list.insert_at_head(4)
+linked_list.insert_at_tail(5)
+linked_list.insert_at_tail(6)
+
+print(linked_list)
+
+linked_list.remove_at_key(4)
+linked_list.remove_at_key(0)
+linked_list.remove_at_key(-1)
 
 print(linked_list)
 
