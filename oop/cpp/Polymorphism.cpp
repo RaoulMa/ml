@@ -56,7 +56,6 @@ cout << " ";
 obj2_ptr -> print();
 cout << "\n";
 
-
 return 0;
 }
 
