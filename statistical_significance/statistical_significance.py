@@ -61,7 +61,6 @@ samples = exp_clicks/n_exp - control_clicks/n_control
 p_value = (samples >= R).mean()
 print('p-value {:.3f}'.format(p_value))
 
-
 # 2. Analytic Solution
 sd = np.sqrt(p_null * (1-p_null) * (1/n_control + 1/n_exp))
 z = R / sd
