@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.stats as stats
 
-
 """
 Compute the minimum number of samples needed to achieve a desired power
 level for a given effect size.
