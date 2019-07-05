@@ -1,5 +1,5 @@
 
-class Solution {
+class binary_gap {
 
     public static void main(String args[]){
 
