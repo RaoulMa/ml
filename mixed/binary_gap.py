@@ -15,7 +15,7 @@ def binary_gap(N):
             max_gap_length = max(max_gap_length, gap_length)
             gap_length = 0
 
-        elif star‚t:
+        elif start:
             gap_length += 1
 
         N = N >> 1
